@@ -1,0 +1,17 @@
+from sklearn.linear_model import LinearRegression
+
+# Training data (experience)
+hours = [[1], [2], [3], [4], [5]]
+scores = [35, 45, 55, 65, 75]
+
+# Create AI model
+model = LinearRegression()
+
+# Train the model (this is LEARNING)
+model.fit(hours, scores)
+
+# Ask AI to predict
+new_hours = [[6]]
+prediction = model.predict(new_hours)
+
+print("Predicted score for 6 study hours:", prediction[0])
