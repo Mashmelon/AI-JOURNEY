@@ -1,1 +1,16 @@
 
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+Hours = np.array([[1],[2],[3],[4]])
+Scores = np.array([30,40,50,60])
+
+model = LinearRegression()
+model.fit(Hours,Scores)
+
+
+new_hours = np.array([[8]])
+pred = model.predict(new_hours)
+print(f"If a student studied for {new_hours} he/she can score about {pred[0]:.2f}")
+print("Model trained successfully")
+
