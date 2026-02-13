@@ -36,6 +36,6 @@ Model Deployment (learning)
 
 To build AI systems that solve real-world problems and create meaningful impact.
 
-⭐ Follow my journey as I grow into an AI Engineer!JOUNEY TO BECOME AN AI ENGINEER
+⭐ Follow my journey as I grow into an AI Engineer!
 
 
