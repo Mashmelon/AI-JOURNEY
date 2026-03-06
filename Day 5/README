@@ -1,0 +1,26 @@
+# Loan Approval Classifier
+
+This project builds a Machine Learning model that predicts whether a loan should be approved or rejected based on applicant information.
+
+## Technologies Used
+- Python
+- Pandas
+- Scikit-learn
+- Logistic Regression
+
+## Features
+- Data preprocessing
+- Train/Test split
+- Feature scaling
+- Logistic Regression model
+- Model evaluation (Accuracy, Confusion Matrix)
+
+## How to Run
+
+1. Install dependencies
+
+pip install -r requirements.txt
+
+2. Run the model
+
+python Loan approval calssifier.py
