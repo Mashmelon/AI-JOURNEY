@@ -1,1 +1,8 @@
+from pyspark.sql import SparkSession
+!ls /content/Air_Cargo_Data
+spark = SparkSession.builder.appName("AviationAI").getOrCreate()
+df = spark.read.option("delimiter", "|") \
+               .option("header", True) \
+               .csv("/content/AIr_Cargo_Data/Air_Cargo_Data.txt")
 
+df.show()
