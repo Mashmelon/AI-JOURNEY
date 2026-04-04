@@ -1,0 +1,111 @@
+# STEP 1: Installation
+!pip install fastapi uvicorn nest-asyncio pyngrok streamlit scikit-learn pandas
+
+#STEP 2: Create CSV file
+import pandas as pd
+
+data = {
+    "question": [
+        "What is air cargo?",
+        "How to track shipment?",
+        "What is airway bill?",
+        "Delivery time for cargo?",
+        "Contact support",
+        "How to cancel shipment?"
+    ],
+    "answer": [
+        "Air cargo refers to goods transported by aircraft.",
+        "You can track shipment using tracking ID.",
+        "Airway bill is a document issued by airline.",
+        "Delivery takes 3-5 business days.",
+        "Contact support at support@aircargo.com",
+        "Shipment can be cancelled before dispatch."
+    ]
+}
+
+df = pd.DataFrame(data)
+df.to_csv("/content/sample_data/AI_Assistant_FAQ.csv", index=False)
+
+print("CSV file created")
+
+#STEP 3: NLP + Chatbot Logic (TF-IDF)
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+# Load CSV
+df = pd.read_csv("/content/sample_data/AI_Assistant_FAQ.csv")
+
+# TF-IDF Model
+vectorizer = TfidfVectorizer()
+X = vectorizer.fit_transform(df['question'])
+
+def chatbot(query):
+    query_vec = vectorizer.transform([query])
+    
+    similarity = cosine_similarity(query_vec, X)
+    index = similarity.argmax()
+    score = similarity[0][index]
+
+    if score < 0.3:
+        return "Sorry, I couldn't understand. Please contact support."
+
+    answer = df.iloc[index]['answer']
+
+    return f"""
+Dear Customer,
+
+{answer}
+
+Regards,  
+Air Cargo AI Assistant
+"""
+
+#STEP 4: FastAPI Backend (COLAB SAFE)
+from fastapi import FastAPI
+from pydantic import BaseModel
+import nest_asyncio
+from pyngrok import ngrok
+import uvicorn
+
+nest_asyncio.apply()
+
+app = FastAPI()
+
+class Query(BaseModel):
+    question: str
+
+@app.get("/")
+def home():
+    return {"message": "API running"}
+
+@app.post("/chat")
+def chat(q: Query):
+    return {"answer": chatbot(q.question)}
+
+# Start ngrok
+public_url = ngrok.connect(8000)
+print("Public API URL:", public_url)
+
+# Run server
+uvicorn.run(app, host="0.0.0.0", port=8000)
+# STEP 5: Streamlit UI (COLAB)
+
+
+
+%%writefile ui.py
+import streamlit as st
+import requests
+
+API_URL = "YOUR_NGROK_URL/chat"
+
+st.title(" Air Cargo AI Assistant")
+
+user_input = st.text_input("Ask your question")
+
+if st.button("Submit"):
+    response = requests.post(API_URL, json={"question": user_input})
+    answer = response.json()["answer"]
+    st.success(answer)
+# STEP 6: Run Streamlit
+!streamlit run ui.py & npx localtunnel --port 8501
